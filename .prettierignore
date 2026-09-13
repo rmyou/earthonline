@@ -1,0 +1,19 @@
+# Ignore everything
+/*
+
+# Except these files & folders
+!/src
+!/public
+!/.github
+!/scripts
+!tsconfig.json
+!astro.config.ts
+!astro-paper.config.ts
+!package.json
+!.prettierrc
+!eslint.config.js
+!README.md
+!.vscode
+
+# Ignore MDX files
+*.mdx
