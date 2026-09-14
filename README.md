@@ -1,8 +1,8 @@
 # 话说三遍淡如水
 
-kream 的个人技术博客。使用 [AstroPaper](https://github.com/satnaing/astro-paper) 和 Astro 构建，部署在 Vercel。
+kream 的个人技术博客。使用 [AstroPaper](https://github.com/satnaing/astro-paper) 和 Astro 构建，通过 GitHub Actions 部署到 GitHub Pages。
 
-- 站点：https://earthonline-six.vercel.app
+- 站点：https://rmyou.github.io/earthonline/
 - 仓库：https://github.com/rmyou/earthonline
 - 内容：Markdown / MDX
 - 搜索：Pagefind
@@ -16,7 +16,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 ```
 
-开发服务器默认运行在 `http://localhost:4321`。
+开发服务器默认运行在 `http://localhost:4321/earthonline/`。
 
 ## 常用命令
 
@@ -56,14 +56,11 @@ description: 用于列表和 SEO 的文章摘要。
 
 ## 部署
 
-GitHub `main` 分支连接 Vercel：
+仓库使用 `.github/workflows/deploy.yml`，在推送到 `main` 后由 GitHub Actions 构建并发布到 GitHub Pages。
 
-- Install Command：`pnpm install --frozen-lockfile`
-- Build Command：`pnpm build`
-- Output Directory：`dist`
-- Production Branch：`main`
+首次启用时，在仓库的 **Settings → Pages → Build and deployment** 中将 Source 设置为 **GitHub Actions**。之后每次推送 `main` 都会自动更新站点，也可以在 Actions 页面手动运行 `Deploy to GitHub Pages` 工作流。
 
-推送到 `main` 会触发生产部署，其他分支和 Pull Request 会生成预览部署。
+站点使用项目子路径 `/earthonline`，因此 Astro 的 `site` 为 `https://rmyou.github.io`，`base` 为 `/earthonline`。新增 Markdown 内链时应使用相对链接，或在 Astro 组件中使用 `getRelativeLocaleUrl`、`getAssetPath`。
 
 ## License
 

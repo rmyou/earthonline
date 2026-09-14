@@ -13,9 +13,9 @@
       "tags:",
       "  - $7",
       "description: $8",
-      "---"
+      "---",
     ],
-    "description": "插入博客文章 Frontmatter"
+    "description": "插入博客文章 Frontmatter",
   },
   "Blog Template": {
     "scope": "markdown",
@@ -27,8 +27,8 @@
       "",
       "## 目录",
       "",
-      "## ${3:小节标题}"
+      "## ${3:小节标题}",
     ],
-    "description": "插入博客文章正文模板"
-  }
+    "description": "插入博客文章正文模板",
+  },
 }

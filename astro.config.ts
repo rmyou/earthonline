@@ -19,8 +19,12 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
 
+const siteUrl = new URL(config.site.url);
+const siteBase = siteUrl.pathname.replace(/\/$/, "") || "/";
+
 export default defineConfig({
-  site: config.site.url,
+  site: siteUrl.origin,
+  base: siteBase,
   integrations: [
     mdx(),
     sitemap({
@@ -81,6 +85,3 @@ export default defineConfig({
     svgOptimizer: svgoOptimizer(),
   },
 });
-
-
-

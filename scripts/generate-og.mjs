@@ -30,7 +30,7 @@ const svg = `
   <text x="80" y="365" fill="#ffffff" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif" font-size="66" font-weight="700">也把真实的过程留下来。</text>
   <rect x="80" y="445" width="96" height="5" rx="2.5" fill="#67e8f9"/>
   <text x="80" y="518" fill="#e6f2f5" font-family="'Microsoft YaHei','PingFang SC','Noto Sans SC',sans-serif" font-size="30" font-weight="600">话说三遍淡如水</text>
-  <text x="80" y="566" fill="#a5f3fc" font-family="Arial, sans-serif" font-size="23">earthonline-six.vercel.app</text>
+  <text x="80" y="566" fill="#a5f3fc" font-family="Arial, sans-serif" font-size="23">rmyou.github.io/earthonline</text>
 </svg>`;
 
 await sharp(Buffer.from(svg))
