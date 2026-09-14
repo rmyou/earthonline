@@ -2,7 +2,7 @@
 
 kream 的个人技术博客。使用 [AstroPaper](https://github.com/satnaing/astro-paper) 和 Astro 构建，部署在 Vercel。
 
-- 站点：https://earthonline.vercel.app
+- 站点：https://earthonline-six.vercel.app
 - 仓库：https://github.com/rmyou/earthonline
 - 内容：Markdown / MDX
 - 搜索：Pagefind

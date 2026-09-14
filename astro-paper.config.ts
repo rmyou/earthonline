@@ -2,7 +2,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://earthonline.vercel.app/",
+    url: "https://earthonline-six.vercel.app/",
     title: "话说三遍淡如水",
     description: "记录技术、产品与持续学习中的真实思考。",
     author: "kream",
