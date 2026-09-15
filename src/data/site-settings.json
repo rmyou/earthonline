@@ -1,6 +1,6 @@
 {
   "site": {
-    "title": "话说三遍淡如水",
+    "title": "日常唠嗑",
     "description": "记录技术、产品与持续学习中的真实思考。",
     "author": "kream",
     "profile": "https://github.com/rmyou"
@@ -10,9 +10,6 @@
     "headline": "把复杂的问题讲清楚，也把真实的过程留下来。",
     "subheadline": "记录技术、产品与持续学习中的真实思考。",
     "intro": "这里记录工程实践、产品思考与持续学习。文章优先讲清问题、取舍和实现过程。"
-  },
-  "background": {
-    "image": ""
   },
   "theme": {
     "preset": "ink"
