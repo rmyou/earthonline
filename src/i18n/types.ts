@@ -1,3 +1,5 @@
+// 用途：定义界面文案的字段结构。
+// 编辑：新增界面文案字段时同步补充英文和中文翻译。
 export interface UIStrings {
   nav: {
     home: string;

@@ -1,3 +1,5 @@
+// 用途：保存简体中文界面文案。
+// 编辑：修改按钮、导航、分页和错误提示文字时优先编辑这里。
 import type { UIStrings } from "../types";
 
 export default {

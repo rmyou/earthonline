@@ -1,3 +1,5 @@
+// 用途：定义站点配置的类型结构和字段说明。
+// 编辑：新增配置项时同步更新这里的类型。
 interface SiteConfig {
   /** Deployed URL of the site, e.g. "https://example.com" */
   url: string;

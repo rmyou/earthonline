@@ -1,3 +1,5 @@
+# 用途：定义 Pages CMS 后台表单和可编辑字段。
+# 编辑：在 Pages CMS 配置变化时修改；日常文章、背景图和主题选择请在网页后台完成，不要直接改这里。
 media:
   input: public/uploads
   output: /earthonline/uploads

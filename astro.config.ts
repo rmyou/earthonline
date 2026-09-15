@@ -1,3 +1,5 @@
+// 用途：配置 Astro 构建、GitHub Pages 子路径、Markdown、字体和 sitemap。
+// 编辑：只有调整构建、路由、字体或 Markdown 处理时才修改。
 import {
   defineConfig,
   envField,

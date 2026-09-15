@@ -1,3 +1,5 @@
+/* 用途：定义全站基础样式、页面宽度、间距与无障碍焦点。 */
+/* 编辑：调整整体布局宽度、基础间距或全局交互状态时修改。 */
 @import "tailwindcss";
 @import "./theme.css";
 @import "./typography.css";

@@ -1,3 +1,5 @@
+// 用途：配置站点名称、作者、发布规则、功能开关和社交链接。
+// 编辑：基础信息和首页文案优先用 Pages CMS；新增功能或社交平台时改这里。
 import siteSettings from "./src/data/site-settings.json";
 import { defineAstroPaperConfig } from "./src/types/config";
 

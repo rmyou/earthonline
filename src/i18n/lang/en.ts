@@ -1,3 +1,5 @@
+// 用途：保存英文回退文案。
+// 编辑：新增界面文案字段时同步补充英文。
 import type { UIStrings } from "../types";
 
 export default {

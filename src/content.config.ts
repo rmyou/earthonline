@@ -1,3 +1,5 @@
+// 用途：定义文章和页面的内容集合、Frontmatter 与校验规则。
+// 编辑：新增文章字段时先在这里添加 schema，再同步 Pages CMS。
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
 import { glob } from "astro/loaders";

@@ -1,3 +1,5 @@
+// 用途：合并用户配置和默认值，供全站组件统一读取。
+// 编辑：通常不要直接修改；优先编辑 astro-paper.config.ts 或 site-settings.json。
 /**
  * Internal resolved configuration used throughout the codebase.
  *

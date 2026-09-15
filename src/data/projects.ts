@@ -1,3 +1,5 @@
+// 用途：提供项目页展示的数据。
+// 编辑：在 Pages CMS 托管项目前，直接在此维护项目名称、链接、技术栈和状态。
 export type ProjectStatus = "active" | "building" | "paused";
 
 export interface Project {

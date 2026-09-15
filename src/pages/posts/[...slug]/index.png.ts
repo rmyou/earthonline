@@ -1,3 +1,5 @@
+// 用途：生成文章动态分享图。
+// 编辑：调整文章分享图布局、字体和内容时修改。
 import type { APIRoute } from "astro";
 import { getCollection } from "astro:content";
 import satori from "satori";

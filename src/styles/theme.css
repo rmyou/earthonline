@@ -1,3 +1,5 @@
+/* 用途：定义主题颜色令牌和蓝青、黑白、暖橙、森林四套配色。 */
+/* 编辑：修改全局颜色时编辑这里；日常切换预设请在 Pages CMS 中操作。 */
 /* Register design tokens for Tailwind v4 */
 @theme inline {
   --color-background: var(--background);

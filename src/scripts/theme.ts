@@ -1,3 +1,5 @@
+// 用途：处理浅色/深色切换和移动浏览器主题色。
+// 编辑：调整主题行为时修改；颜色本身在 theme.css 中。
 const THEME_KEY = "theme";
 const LIGHT = "light";
 const DARK = "dark";

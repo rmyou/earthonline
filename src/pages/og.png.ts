@@ -1,3 +1,5 @@
+// 用途：生成站点默认动态分享图。
+// 编辑：调整默认分享图视觉和文字时修改。
 import type { APIRoute } from "astro";
 import satori from "satori";
 import sharp from "sharp";
