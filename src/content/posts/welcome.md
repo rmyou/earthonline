@@ -1,15 +1,13 @@
 ---
-author: kream
-pubDatetime: 2026-09-13T20:30:00+08:00
 title: 欢迎来到话说三遍淡如水
-featured: true
-draft: false
+description: 为什么要认真记录，以及这个博客准备长期写下什么。
+pubDatetime: 2026-09-15T10:37
 tags:
   - 随笔
   - 写作
-description: "为什么要认真记录，以及这个博客准备长期写下什么。"
+draft: false
+featured: true
 ---
-
 “话说三遍淡如水”不是一句消极的话，更像一条写作准则。
 
 第一遍可能是新鲜，第二遍是强调，第三遍如果仍然只是重复，就会变成噪音。所以我想在这个博客里尽量少说正确的废话，多写具体的问题、真实的取舍和可验证的过程。
