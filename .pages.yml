@@ -104,11 +104,5 @@ content:
             type: select
             options:
               values:
-                - name: teal
-                  label: 蓝青
-                - name: ink
-                  label: 黑白
-                - name: amber
-                  label: 暖橙
                 - name: forest
                   label: 森林
