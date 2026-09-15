@@ -7,6 +7,7 @@ tags:
   - 写作
 draft: false
 featured: true
+ogImage: /earthonline/uploads/wall_1777748190.png
 ---
 “话说三遍淡如水”不是一句消极的话，更像一条写作准则。
 
