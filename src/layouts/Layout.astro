@@ -5,6 +5,7 @@ import { getRelativeLocaleUrl } from "astro:i18n";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
+import siteSettings from "@/data/site-settings.json";
 import "@/styles/global.css";
 
 type Props = {
@@ -33,6 +34,7 @@ const rssHref = getRelativeLocaleUrl(
 <!doctype html>
 <html
   dir={site.dir ?? "ltr"}
+  data-theme-preset={siteSettings.theme.preset}
   lang={Astro.currentLocale ?? site.lang}
   class="overflow-y-scroll scroll-smooth"
 >

@@ -54,6 +54,17 @@ description: 用于列表和 SEO 的文章摘要。
 
 站点名称、作者、域名、导航和社交链接统一在 `astro-paper.config.ts` 中配置。主题颜色位于 `src/styles/theme.css`，界面文案位于 `src/i18n/lang/zh-CN.ts`。
 
+## 使用网页后台
+
+站点接入 [Pages CMS](https://app.pagescms.org/)，不需要数据库或额外服务器。
+
+1. 打开 `https://app.pagescms.org/` 并使用 GitHub 登录。
+2. 安装 Pages CMS GitHub App，并授权 `rmyou/earthonline`。
+3. 选择该仓库后，可以编辑文章、页面、站点资料、首页文案和主题配色。
+4. 保存时 Pages CMS 会提交到 `main`，GitHub Actions 随后自动发布。
+
+可编辑的主题预设包括蓝青、黑白、暖橙和森林。文章图片上传到 `public/uploads/`，正文使用 Markdown。
+
 ## 部署
 
 仓库使用 `.github/workflows/deploy.yml`，在推送到 `main` 后由 GitHub Actions 构建并发布到 GitHub Pages。

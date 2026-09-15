@@ -1,12 +1,13 @@
+import siteSettings from "./src/data/site-settings.json";
 import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
     url: "https://rmyou.github.io/earthonline/",
-    title: "话说三遍淡如水",
-    description: "记录技术、产品与持续学习中的真实思考。",
-    author: "kream",
-    profile: "https://github.com/rmyou",
+    title: siteSettings.site.title,
+    description: siteSettings.site.description,
+    author: siteSettings.site.author,
+    profile: siteSettings.site.profile,
     ogImage: "default-og.jpg",
     lang: "zh-CN",
     timezone: "Asia/Shanghai",

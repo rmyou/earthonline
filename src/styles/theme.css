@@ -34,3 +34,63 @@
   --muted-foreground: #a7c2c9;
   --border: #27505c;
 }
+/* Optional presets managed from Pages CMS */
+[data-theme="light"][data-theme-preset="ink"] {
+  --background: #fafafa;
+  --foreground: #18181b;
+  --accent: #27272a;
+  --accent-foreground: #ffffff;
+  --muted: #e4e4e7;
+  --muted-foreground: #52525b;
+  --border: #d4d4d8;
+}
+
+[data-theme="dark"][data-theme-preset="ink"] {
+  --background: #111113;
+  --foreground: #f4f4f5;
+  --accent: #f4f4f5;
+  --accent-foreground: #18181b;
+  --muted: #27272a;
+  --muted-foreground: #a1a1aa;
+  --border: #3f3f46;
+}
+
+[data-theme="light"][data-theme-preset="amber"] {
+  --background: #fffbf5;
+  --foreground: #2c2118;
+  --accent: #b45309;
+  --accent-foreground: #ffffff;
+  --muted: #f5e8d8;
+  --muted-foreground: #6b5542;
+  --border: #ead7c1;
+}
+
+[data-theme="dark"][data-theme-preset="amber"] {
+  --background: #211a14;
+  --foreground: #f8ede0;
+  --accent: #fbbf24;
+  --accent-foreground: #422006;
+  --muted: #38291d;
+  --muted-foreground: #d6bba0;
+  --border: #64472c;
+}
+
+[data-theme="light"][data-theme-preset="forest"] {
+  --background: #f7fbf8;
+  --foreground: #132a20;
+  --accent: #15803d;
+  --accent-foreground: #ffffff;
+  --muted: #e1efe6;
+  --muted-foreground: #4b6658;
+  --border: #cfe2d6;
+}
+
+[data-theme="dark"][data-theme-preset="forest"] {
+  --background: #0f1f18;
+  --foreground: #e6f3ec;
+  --accent: #86efac;
+  --accent-foreground: #052e16;
+  --muted: #1b3528;
+  --muted-foreground: #a7c9b5;
+  --border: #315844;
+}

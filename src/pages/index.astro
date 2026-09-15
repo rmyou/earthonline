@@ -12,6 +12,7 @@ import LinkButton from "@/components/LinkButton.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
 import { useTranslations } from "@/i18n";
 import config from "@/config";
+import siteSettings from "@/data/site-settings.json";
 
 const { socials, posts: postsConfig } = config;
 
@@ -35,11 +36,11 @@ const homePath = getRelativeLocaleUrl(locale, "");
   >
     <section id="hero" class="border-border border-b pt-10 pb-8">
       <p class="text-accent mb-3 text-xs font-semibold tracking-[0.22em]">
-        KREAM'S FIELD NOTES
+        {siteSettings.home.eyebrow}
       </p>
       <div class="mb-5 flex items-start gap-3">
         <h1 class="max-w-2xl text-3xl leading-tight font-bold sm:text-5xl">
-          把复杂的问题讲清楚，也把真实的过程留下来。
+          {siteSettings.home.headline}
         </h1>
         <a
           target="_blank"
@@ -57,9 +58,9 @@ const homePath = getRelativeLocaleUrl(locale, "");
         </a>
       </div>
 
-      <p class="text-lg">{config.site.description}</p>
+      <p class="text-lg">{siteSettings.home.subheadline}</p>
       <p class="text-muted-foreground mt-2">
-        这里记录工程实践、产品思考与持续学习。文章优先讲清问题、取舍和实现过程。
+        {siteSettings.home.intro}
       </p>
       {
         socials.length > 0 && (

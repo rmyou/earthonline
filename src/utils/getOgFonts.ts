@@ -1,7 +1,5 @@
-const regularFontUrl =
-  "https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.3.0/files/noto-sans-sc-chinese-simplified-400-normal.woff";
-const boldFontUrl =
-  "https://cdn.jsdelivr.net/npm/@fontsource/noto-sans-sc@5.3.0/files/noto-sans-sc-chinese-simplified-700-normal.woff";
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
 
 type OgFonts = {
   regularData: ArrayBuffer;
@@ -10,18 +8,20 @@ type OgFonts = {
 
 let fontsPromise: Promise<OgFonts> | undefined;
 
-async function fetchFont(url: string) {
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to download OG font: ${response.status} ${url}`);
-  }
-  return response.arrayBuffer();
+async function readFont(filename: string): Promise<ArrayBuffer> {
+  const file = await readFile(
+    resolve(process.cwd(), "src/assets/og-fonts", filename)
+  );
+  return file.buffer.slice(
+    file.byteOffset,
+    file.byteOffset + file.byteLength
+  ) as ArrayBuffer;
 }
 
 export function getOgFonts(): Promise<OgFonts> {
   fontsPromise ??= Promise.all([
-    fetchFont(regularFontUrl),
-    fetchFont(boldFontUrl),
+    readFont("NotoSansSC-Regular.woff"),
+    readFont("NotoSansSC-Bold.woff"),
   ]).then(([regularData, boldData]) => ({ regularData, boldData }));
 
   return fontsPromise;

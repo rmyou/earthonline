@@ -1,0 +1,114 @@
+media:
+  input: public/uploads
+  output: /earthonline/uploads
+
+content:
+  - name: posts
+    label: 文章
+    type: collection
+    path: src/content/posts
+    filename:
+      template: "{year}-{month}-{day}-{primary}.md"
+      field: create
+    fields:
+      - name: title
+        label: 标题
+        type: string
+      - name: description
+        label: 摘要
+        type: text
+      - name: pubDatetime
+        label: 发布时间
+        type: date
+        options:
+          time: true
+      - name: tags
+        label: 标签
+        type: string
+        list: true
+      - name: draft
+        label: 草稿
+        type: boolean
+        default: false
+      - name: featured
+        label: 精选
+        type: boolean
+        default: false
+      - name: ogImage
+        label: 分享图
+        type: image
+      - name: body
+        label: 正文
+        type: rich-text
+
+  - name: pages
+    label: 页面
+    type: collection
+    path: src/content/pages
+    filename: "{primary}.md"
+    fields:
+      - name: title
+        label: 页面标题
+        type: string
+      - name: description
+        label: 页面摘要
+        type: text
+      - name: body
+        label: 正文
+        type: rich-text
+
+  - name: site-settings
+    label: 站点设置
+    type: file
+    path: src/data/site-settings.json
+    format: json
+    fields:
+      - name: site
+        label: 基本信息
+        type: object
+        fields:
+          - name: title
+            label: 网站名称
+            type: string
+          - name: description
+            label: 网站简介
+            type: text
+          - name: author
+            label: 作者
+            type: string
+          - name: profile
+            label: GitHub 主页
+            type: string
+      - name: home
+        label: 首页文案
+        type: object
+        fields:
+          - name: eyebrow
+            label: 顶部小标题
+            type: string
+          - name: headline
+            label: 主标题
+            type: text
+          - name: subheadline
+            label: 副标题
+            type: text
+          - name: intro
+            label: 首页说明
+            type: text
+      - name: theme
+        label: 主题颜色
+        type: object
+        fields:
+          - name: preset
+            label: 配色方案
+            type: select
+            options:
+              values:
+                - name: teal
+                  label: 蓝青
+                - name: ink
+                  label: 黑白
+                - name: amber
+                  label: 暖橙
+                - name: forest
+                  label: 森林
