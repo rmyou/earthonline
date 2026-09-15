@@ -29,6 +29,7 @@ const rssHref = getRelativeLocaleUrl(
   Astro.currentLocale ?? config.site.lang,
   "rss.xml"
 );
+const backgroundImage = siteSettings.background?.image?.trim();
 ---
 
 <!doctype html>
@@ -119,8 +120,26 @@ const rssHref = getRelativeLocaleUrl(
     <ClientRouter />
   </head>
   <body
-    class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
+    class:list={[
+      "font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col",
+      backgroundImage ? "relative isolate bg-transparent" : "bg-background",
+    ]}
   >
+    {
+      backgroundImage && (
+        <>
+          <div
+            aria-hidden="true"
+            class="fixed inset-0 -z-20 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url("${backgroundImage}")` }}
+          />
+          <div
+            aria-hidden="true"
+            class="bg-background/85 fixed inset-0 -z-10"
+          />
+        </>
+      )
+    }
     <slot />
     <script>
       import "@/scripts/theme";

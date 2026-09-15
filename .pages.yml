@@ -95,6 +95,13 @@ content:
           - name: intro
             label: 首页说明
             type: text
+      - name: background
+        label: 网页背景
+        type: object
+        fields:
+          - name: image
+            label: 背景图片
+            type: image
       - name: theme
         label: 主题颜色
         type: object
@@ -112,4 +119,3 @@ content:
                   label: 暖橙
                 - name: forest
                   label: 森林
-
