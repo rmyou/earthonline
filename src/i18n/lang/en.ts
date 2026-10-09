@@ -9,6 +9,7 @@ export default {
     tags: "Tags",
     about: "About",
     projects: "Projects",
+    photography: "Photos",
     archives: "Archives",
     search: "Search",
   },
@@ -56,6 +57,9 @@ export default {
     projectsTitle: "Projects",
     projectsDesc: "Selected projects I build and maintain.",
 
+    photographyTitle: "Photography",
+    photographyDesc: "Moments I want to keep, through the lens.",
+
     searchTitle: "Search",
     searchDesc: "Search any article ...",
   },
@@ -65,6 +69,9 @@ export default {
     paused: "Paused",
     repository: "Repository",
     website: "Website",
+  },
+  photos: {
+    empty: "Photos are being curated. Check back soon.",
   },
   a11y: {
     skipToContent: "Skip to content",
@@ -76,6 +83,19 @@ export default {
     goToPreviousPage: "Go to previous page",
     goToNextPage: "Go to next page",
     paginationLabel: "Pagination navigation",
+    musicPlay: "Play background music",
+    musicPause: "Pause background music",
+    musicPrevious: "Previous track",
+    musicNext: "Next track",
+    musicVolume: "Volume",
+    musicMute: "Mute",
+    musicUnmute: "Unmute",
+    musicExpand: "Expand music player",
+    musicCollapse: "Collapse music player",
+    photoOpen: "View large image",
+    photoClose: "Close preview",
+    photoPrevious: "Previous photo",
+    photoNext: "Next photo",
   },
   notFound: {
     title: "404 Not Found",

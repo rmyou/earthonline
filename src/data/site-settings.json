@@ -5,6 +5,12 @@
     "author": "kream",
     "profile": "https://github.com/rmyou"
   },
+  "home": {
+    "eyebrow": "KREAM'S LIFE",
+    "headline": "在这里，你可以看到一个普通人的普通故事",
+    "subheadline": "日常、摄影与持续学习中的真实片段，都留在这里。",
+    "intro": "这里记录工程实践、产品思考、摄影与持续学习。文章优先讲清问题、取舍和实现过程，照片则定格那些想留下来的瞬间。"
+  },
   "background": {
     "image": "/earthonline/uploads/微信图片_20260806142919_28_23.png"
   },

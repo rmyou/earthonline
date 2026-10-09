@@ -1,8 +1,12 @@
 # 用途：定义 Pages CMS 后台表单和可编辑字段。
-# 编辑：在 Pages CMS 配置变化时修改；日常文章、背景图和主题选择请在网页后台完成，不要直接改这里。
+# 编辑：在 Pages CMS 配置变化时修改；日常文章、背景图、音乐和摄影作品请在网页后台完成，不要直接改这里。
 media:
-  input: public/uploads
-  output: /earthonline/uploads
+  - input: public/uploads
+    output: /earthonline/uploads
+  - input: public/music
+    output: /earthonline/music
+  - input: public/photography
+    output: /earthonline/photography
 
 content:
   - name: posts
@@ -59,6 +63,74 @@ content:
         label: 正文
         type: rich-text
 
+  - name: photography
+    label: 摄影作品
+    type: file
+    path: src/data/photography.json
+    format: json
+    fields:
+      - name: photos
+        label: 作品列表
+        type: object
+        list: true
+        fields:
+          - name: title
+            label: 标题
+            type: string
+          - name: image
+            label: 照片（先在媒体库选择 photography 目录上传）
+            type: image
+          - name: date
+            label: 拍摄日期
+            type: date
+            required: false
+          - name: location
+            label: 拍摄地点
+            type: string
+            required: false
+          - name: description
+            label: 作品说明
+            type: text
+            required: false
+          - name: draft
+            label: 隐藏该作品
+            type: boolean
+            default: false
+
+  - name: music
+    label: 背景音乐
+    type: file
+    path: src/data/music.json
+    format: json
+    fields:
+      - name: enabled
+        label: 显示播放器
+        type: boolean
+        default: true
+      - name: autoplay
+        label: 尝试自动播放（浏览器通常会拦截，仅在访客首次点击后生效）
+        type: boolean
+        default: false
+      - name: tracks
+        label: 曲目列表
+        type: object
+        list: true
+        fields:
+          - name: title
+            label: 曲名
+            type: string
+          - name: artist
+            label: 作者 / 来源
+            type: string
+            required: false
+          - name: src
+            label: 音频文件（先在媒体库选择 music 目录上传，支持 mp3 / m4a / ogg）
+            type: file
+          - name: cover
+            label: 封面图片（可选）
+            type: image
+            required: false
+
   - name: site-settings
     label: 站点设置
     type: file
@@ -84,19 +156,24 @@ content:
       - name: home
         label: 首页文案
         type: object
+        required: false
         fields:
           - name: eyebrow
             label: 顶部小标题
             type: string
+            required: false
           - name: headline
             label: 主标题
             type: text
+            required: false
           - name: subheadline
             label: 副标题
             type: text
+            required: false
           - name: intro
             label: 首页说明
             type: text
+            required: false
       - name: background
         label: 网页背景
         type: object

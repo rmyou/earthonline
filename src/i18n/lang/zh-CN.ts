@@ -9,6 +9,7 @@ export default {
     tags: "标签",
     about: "关于",
     projects: "项目",
+    photography: "摄影",
     archives: "归档",
     search: "搜索",
   },
@@ -56,6 +57,9 @@ export default {
     projectsTitle: "项目",
     projectsDesc: "持续构建和维护的开源项目与作品。",
 
+    photographyTitle: "摄影",
+    photographyDesc: "用镜头定格想留下来的瞬间。",
+
     searchTitle: "搜索",
     searchDesc: "输入关键词，快速查找站内文章。",
   },
@@ -65,6 +69,9 @@ export default {
     paused: "已暂停",
     repository: "查看源码",
     website: "访问网站",
+  },
+  photos: {
+    empty: "摄影作品正在整理中，很快就会在这里展出。",
   },
   a11y: {
     skipToContent: "跳到正文",
@@ -76,6 +83,19 @@ export default {
     goToPreviousPage: "前往上一页",
     goToNextPage: "前往下一页",
     paginationLabel: "分页导航",
+    musicPlay: "播放背景音乐",
+    musicPause: "暂停背景音乐",
+    musicPrevious: "上一首",
+    musicNext: "下一首",
+    musicVolume: "音量",
+    musicMute: "静音",
+    musicUnmute: "取消静音",
+    musicExpand: "展开音乐播放器",
+    musicCollapse: "收起音乐播放器",
+    photoOpen: "查看大图",
+    photoClose: "关闭大图",
+    photoPrevious: "上一张",
+    photoNext: "下一张",
   },
   notFound: {
     title: "404 页面不存在",

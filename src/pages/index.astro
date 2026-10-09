@@ -26,6 +26,14 @@ const sortedPosts = getSortedPosts(posts);
 const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 const homePath = getRelativeLocaleUrl(locale, "");
+
+// home 文案通过 Pages CMS 维护；缺失时降级展示，避免后台误删导致构建失败。
+const home: Partial<{
+  eyebrow: string;
+  headline: string;
+  subheadline: string;
+  intro: string;
+}> = siteSettings.home ?? {};
 ---
 
 <Layout>
@@ -37,12 +45,16 @@ const homePath = getRelativeLocaleUrl(locale, "");
     class="app-layout my-1"
   >
     <section id="hero" class="border-border border-b pt-10 pb-8">
-      <p class="text-accent mb-3 text-xs font-semibold tracking-[0.22em]">
-        {siteSettings.home.eyebrow}
-      </p>
+      {
+        home.eyebrow && (
+          <p class="text-accent mb-3 text-xs font-semibold tracking-[0.22em]">
+            {home.eyebrow}
+          </p>
+        )
+      }
       <div class="mb-5 flex items-start gap-3">
         <h1 class="max-w-2xl text-3xl leading-tight font-bold sm:text-5xl">
-          {siteSettings.home.headline}
+          {home.headline ?? siteSettings.site.title}
         </h1>
         <a
           target="_blank"
@@ -60,10 +72,8 @@ const homePath = getRelativeLocaleUrl(locale, "");
         </a>
       </div>
 
-      <p class="text-lg">{siteSettings.home.subheadline}</p>
-      <p class="text-muted-foreground mt-2">
-        {siteSettings.home.intro}
-      </p>
+      {home.subheadline && <p class="text-lg">{home.subheadline}</p>}
+      {home.intro && <p class="text-muted-foreground mt-2">{home.intro}</p>}
       {
         socials.length > 0 && (
           <div class="mt-5 flex max-sm:flex-col sm:items-center">
@@ -119,6 +129,10 @@ const homePath = getRelativeLocaleUrl(locale, "");
       </LinkButton>
       <LinkButton href={getRelativeLocaleUrl(locale, "projects")}>
         {t.nav.projects}
+        <IconArrowRight class="inline-block rtl:-rotate-180" />
+      </LinkButton>
+      <LinkButton href={getRelativeLocaleUrl(locale, "photography")}>
+        {t.nav.photography}
         <IconArrowRight class="inline-block rtl:-rotate-180" />
       </LinkButton>
     </div>

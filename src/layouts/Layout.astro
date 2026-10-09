@@ -8,6 +8,7 @@ import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
 import config from "@/config";
 import siteSettings from "@/data/site-settings.json";
+import MusicPlayer from "@/components/MusicPlayer.astro";
 import "@/styles/global.css";
 
 type Props = {
@@ -143,6 +144,7 @@ const backgroundImage = siteSettings.background?.image?.trim();
       )
     }
     <slot />
+    <MusicPlayer />
     <script>
       import "@/scripts/theme";
     </script>

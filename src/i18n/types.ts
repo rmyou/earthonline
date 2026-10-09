@@ -7,6 +7,7 @@ export interface UIStrings {
     tags: string;
     about: string;
     projects: string;
+    photography: string;
     archives: string;
     search: string;
   };
@@ -54,6 +55,9 @@ export interface UIStrings {
     projectsTitle: string;
     projectsDesc: string;
 
+    photographyTitle: string;
+    photographyDesc: string;
+
     searchTitle: string;
     searchDesc: string;
   };
@@ -63,6 +67,9 @@ export interface UIStrings {
     paused: string;
     repository: string;
     website: string;
+  };
+  photos: {
+    empty: string;
   };
   a11y: {
     skipToContent: string;
@@ -74,6 +81,19 @@ export interface UIStrings {
     goToPreviousPage: string;
     goToNextPage: string;
     paginationLabel: string;
+    musicPlay: string;
+    musicPause: string;
+    musicPrevious: string;
+    musicNext: string;
+    musicVolume: string;
+    musicMute: string;
+    musicUnmute: string;
+    musicExpand: string;
+    musicCollapse: string;
+    photoOpen: string;
+    photoClose: string;
+    photoPrevious: string;
+    photoNext: string;
   };
   notFound: {
     title: string;

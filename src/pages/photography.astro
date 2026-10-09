@@ -1,0 +1,86 @@
+---
+// 用途：渲染摄影作品集页面（白框拍立得画廊 + 全屏高斯模糊灯箱）。
+// 编辑：作品数据在 src/data/photography.json；灯箱交互见 PhotoGallery.astro。
+import dayjs from "dayjs";
+import photographyData from "@/data/photography.json";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Main from "@/components/Main.astro";
+import Footer from "@/components/Footer.astro";
+import PhotoGallery from "@/components/PhotoGallery.astro";
+import { resolvePublicAsset } from "@/utils/resolvePublicAsset";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type RawPhoto = {
+  title?: unknown;
+  image?: unknown;
+  date?: unknown;
+  location?: unknown;
+  description?: unknown;
+  draft?: unknown;
+};
+
+type GalleryPhoto = {
+  src: string;
+  title: string;
+  dateLabel: string;
+  location: string;
+  description: string;
+};
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+const rawPhotos: RawPhoto[] = Array.isArray(
+  (photographyData as { photos?: RawPhoto[] }).photos
+)
+  ? (photographyData as { photos: RawPhoto[] }).photos
+  : [];
+
+const photos: GalleryPhoto[] = rawPhotos
+  .filter(
+    photo => photo && photo.draft !== true && resolvePublicAsset(photo.image)
+  )
+  .map(photo => {
+    const rawDate =
+      typeof photo.date === "string" && photo.date.trim()
+        ? dayjs(photo.date)
+        : null;
+    const dateLabel =
+      rawDate && rawDate.isValid() ? rawDate.format("YYYY-MM-DD") : "";
+    const title =
+      typeof photo.title === "string" && photo.title.trim()
+        ? photo.title.trim()
+        : dateLabel;
+    return {
+      src: resolvePublicAsset(photo.image),
+      title,
+      dateLabel,
+      location: typeof photo.location === "string" ? photo.location.trim() : "",
+      description:
+        typeof photo.description === "string" ? photo.description.trim() : "",
+    };
+  })
+  .sort((a, b) => {
+    const timeA = a.dateLabel ? dayjs(a.dateLabel).valueOf() : 0;
+    const timeB = b.dateLabel ? dayjs(b.dateLabel).valueOf() : 0;
+    return timeB - timeA;
+  });
+---
+
+<Layout
+  title={`${t.pages.photographyTitle} | ${config.site.title}`}
+  description={t.pages.photographyDesc}
+>
+  <Header />
+
+  <Breadcrumb />
+
+  <Main pageTitle={t.pages.photographyTitle} pageDesc={t.pages.photographyDesc}>
+    <PhotoGallery {photos} />
+  </Main>
+
+  <Footer />
+</Layout>

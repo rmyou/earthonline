@@ -1,0 +1,328 @@
+---
+// 用途：渲染摄影作品瀑布流和“同图高斯模糊背景 + 白框阴影大图”灯箱。
+// 编辑：作品数据在 src/data/photography.json；仅调整画廊或灯箱样式时修改本文件。
+import IconX from "@/assets/icons/IconX.svg";
+import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type GalleryPhoto = {
+  src: string;
+  title: string;
+  dateLabel: string;
+  location: string;
+  description: string;
+};
+
+type Props = {
+  photos: GalleryPhoto[];
+};
+
+const { photos } = Astro.props;
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+---
+
+{
+  photos.length === 0 ? (
+    <p class="text-muted-foreground border-border rounded border border-dashed px-6 py-16 text-center">
+      {t.photos.empty}
+    </p>
+  ) : (
+    <>
+      <ul id="photo-grid" class="columns-1 gap-6 sm:columns-2 lg:columns-3">
+        {photos.map((photo, index) => (
+          <li class="mb-6 break-inside-avoid">
+            <button
+              type="button"
+              class="group block w-full rounded-[3px] bg-white p-3 pb-4 text-start shadow-lg transition duration-200 hover:-translate-y-1 hover:shadow-2xl focus-visible:-translate-y-1"
+              data-index={index}
+              aria-haspopup="dialog"
+              aria-label={`${t.a11y.photoOpen}: ${photo.title}`}
+            >
+              <img
+                src={photo.src}
+                alt={photo.title}
+                loading="lazy"
+                class="block w-full"
+              />
+              <span class="mt-3 flex items-baseline justify-between gap-3 px-0.5">
+                <span class="truncate text-sm font-medium text-zinc-800">
+                  {photo.title}
+                </span>
+                {photo.dateLabel && (
+                  <span class="shrink-0 text-xs text-zinc-500">
+                    {photo.dateLabel}
+                  </span>
+                )}
+              </span>
+              {photo.location && (
+                <span class="mt-1 block truncate px-0.5 text-xs text-zinc-500">
+                  {photo.location}
+                </span>
+              )}
+            </button>
+          </li>
+        ))}
+      </ul>
+
+      {/* 全屏灯箱：同图高斯模糊背景，中央白框阴影完整图 */}
+      <div
+        id="photo-lightbox"
+        class="fixed inset-0 z-50 hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-label={t.a11y.photoOpen}
+      >
+        <img
+          id="plb-bg"
+          alt=""
+          class="absolute inset-0 size-full scale-110 object-cover opacity-90 blur-2xl brightness-[0.25]"
+        />
+        <div
+          id="plb-backdrop"
+          class="absolute inset-0 bg-black/55"
+          aria-hidden="true"
+        />
+
+        <div class="absolute inset-x-0 top-0 flex items-center justify-between p-4">
+          <span
+            id="plb-counter"
+            class="text-sm font-medium tracking-widest text-white/80"
+          />
+          <button
+            id="plb-close"
+            type="button"
+            class="focus-outline grid size-11 place-items-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/25"
+            aria-label={t.a11y.photoClose}
+          >
+            <IconX class="size-5" />
+          </button>
+        </div>
+
+        <div
+          id="plb-stage"
+          class="absolute inset-0 flex items-center justify-center px-14 sm:px-20"
+        >
+          <button
+            id="plb-prev"
+            type="button"
+            class="focus-outline absolute start-3 grid size-11 place-items-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/25 sm:start-5"
+            aria-label={t.a11y.photoPrevious}
+          >
+            <IconChevronLeft class="size-6" />
+          </button>
+
+          <figure class="max-w-[88vw] rounded-[3px] bg-white p-3 shadow-2xl sm:p-4">
+            <img
+              id="plb-img"
+              alt=""
+              class="block max-h-[60vh] max-w-[82vw] object-contain sm:max-h-[66vh]"
+            />
+            <figcaption class="max-w-[82vw] pt-3 text-zinc-800">
+              <p
+                id="plb-title"
+                class="truncate text-sm font-medium sm:text-base"
+              />
+              <p id="plb-meta" class="mt-0.5 text-xs text-zinc-500" />
+              <p
+                id="plb-desc"
+                class="mt-2 hidden max-w-[72ch] text-xs leading-5 text-zinc-600 sm:block"
+              />
+            </figcaption>
+          </figure>
+
+          <button
+            id="plb-next"
+            type="button"
+            class="focus-outline absolute end-3 grid size-11 place-items-center rounded-full border border-white/25 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/25 sm:end-5"
+            aria-label={t.a11y.photoNext}
+          >
+            <IconChevronLeft class="size-6 rotate-180" />
+          </button>
+        </div>
+      </div>
+
+      <script
+        is:inline
+        type="application/json"
+        id="photo-gallery-data"
+        set:html={JSON.stringify(photos)}
+      />
+    </>
+  )
+}
+
+<script>
+  type GalleryPhoto = {
+    src: string;
+    title: string;
+    dateLabel: string;
+    location: string;
+    description: string;
+  };
+
+  function initPhotoGallery() {
+    const grid = document.getElementById("photo-grid");
+    const root = document.getElementById("photo-lightbox");
+    if (!grid || !root || root.dataset.ready === "true") return;
+    root.dataset.ready = "true";
+
+    const dataEl = document.getElementById("photo-gallery-data");
+    if (!(dataEl instanceof HTMLScriptElement) || !dataEl.textContent) return;
+
+    let photos: GalleryPhoto[] = [];
+    try {
+      photos = JSON.parse(dataEl.textContent) as GalleryPhoto[];
+    } catch {
+      return;
+    }
+    if (photos.length === 0) return;
+
+    const bg = document.getElementById("plb-bg");
+    const image = document.getElementById("plb-img");
+    const titleEl = document.getElementById("plb-title");
+    const metaEl = document.getElementById("plb-meta");
+    const descEl = document.getElementById("plb-desc");
+    const counterEl = document.getElementById("plb-counter");
+    const closeBtn = document.getElementById("plb-close");
+    const prevBtn = document.getElementById("plb-prev");
+    const nextBtn = document.getElementById("plb-next");
+    const stage = document.getElementById("plb-stage");
+
+    if (
+      !(bg instanceof HTMLImageElement) ||
+      !(image instanceof HTMLImageElement) ||
+      !titleEl ||
+      !metaEl ||
+      !descEl ||
+      !counterEl ||
+      !(closeBtn instanceof HTMLButtonElement) ||
+      !(prevBtn instanceof HTMLButtonElement) ||
+      !(nextBtn instanceof HTMLButtonElement) ||
+      !stage
+    ) {
+      return;
+    }
+
+    let current = -1;
+    let lastTrigger: HTMLElement | null = null;
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const preload = (index: number) => {
+      const photo = photos[index];
+      if (!photo) return;
+      const probe = new Image();
+      probe.src = photo.src;
+    };
+
+    const render = (index: number) => {
+      const photo = photos[index];
+      if (!photo) return;
+      current = index;
+      bg.src = photo.src;
+      image.src = photo.src;
+      image.alt = photo.title;
+      titleEl.textContent = photo.title;
+      const meta = [photo.dateLabel, photo.location]
+        .filter(Boolean)
+        .join(" · ");
+      metaEl.textContent = meta;
+      if (photo.description) {
+        descEl.textContent = photo.description;
+        descEl.classList.remove("hidden");
+      } else {
+        descEl.textContent = "";
+        descEl.classList.add("hidden");
+      }
+      counterEl.textContent = `${index + 1} / ${photos.length}`;
+      preload((index + 1) % photos.length);
+      preload((index - 1 + photos.length) % photos.length);
+    };
+
+    const close = () => {
+      if (root.classList.contains("hidden")) return;
+      root.classList.add("hidden");
+      document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKeyDown);
+      bg.removeAttribute("src");
+      image.removeAttribute("src");
+      lastTrigger?.focus();
+      lastTrigger = null;
+      current = -1;
+    };
+
+    const open = (index: number, trigger: HTMLElement) => {
+      lastTrigger = trigger;
+      render(index);
+      root.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+      closeBtn.focus();
+      document.addEventListener("keydown", onKeyDown);
+    };
+
+    const go = (step: number) => {
+      if (current < 0) return;
+      render((current + step + photos.length) % photos.length);
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        close();
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        go(-1);
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        go(1);
+      }
+    };
+
+    grid.addEventListener("click", event => {
+      const trigger = (
+        event.target as HTMLElement | null
+      )?.closest<HTMLElement>("button[data-index]");
+      if (!trigger || !grid.contains(trigger)) return;
+      const index = Number.parseInt(trigger.dataset.index ?? "", 10);
+      if (Number.isNaN(index)) return;
+      open(index, trigger);
+    });
+
+    closeBtn.addEventListener("click", close);
+    prevBtn.addEventListener("click", () => go(-1));
+    nextBtn.addEventListener("click", () => go(1));
+
+    // Click on the dimmed area (not the framed photo or controls) closes.
+    stage.addEventListener("click", event => {
+      if (event.target === stage) close();
+    });
+    root.addEventListener("click", event => {
+      if (event.target === root || event.target === bg) close();
+    });
+
+    // Basic swipe support on touch devices.
+    root.addEventListener("touchstart", event => {
+      const touch = event.touches[0];
+      if (!touch) return;
+      touchStartX = touch.clientX;
+      touchStartY = touch.clientY;
+    });
+    root.addEventListener("touchend", event => {
+      if (current < 0) return;
+      const touch = event.changedTouches[0];
+      if (!touch) return;
+      const deltaX = touch.clientX - touchStartX;
+      const deltaY = touch.clientY - touchStartY;
+      if (Math.abs(deltaX) > 56 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+        go(deltaX < 0 ? 1 : -1);
+      }
+    });
+
+    document.addEventListener("astro:before-swap", close);
+  }
+
+  document.addEventListener("astro:page-load", initPhotoGallery);
+</script>

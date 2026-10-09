@@ -1,0 +1,576 @@
+---
+// 用途：渲染全站左下角悬浮背景音乐播放器，支持本地曲目、播放记忆和跨页续播。
+// 编辑：曲目数据在 src/data/music.json；仅调整界面时修改本文件。
+import musicData from "@/data/music.json";
+import { resolvePublicAsset } from "@/utils/resolvePublicAsset";
+import { useTranslations } from "@/i18n";
+import config from "@/config";
+
+type Track = {
+  title: string;
+  artist: string;
+  src: string;
+  cover: string;
+};
+
+const locale = Astro.currentLocale ?? config.site.lang;
+const t = useTranslations(locale);
+
+const resolveAsset = resolvePublicAsset;
+
+const enabled = musicData.enabled !== false;
+const autoplay = musicData.autoplay === true;
+const tracks: Track[] = Array.isArray(musicData.tracks)
+  ? (musicData.tracks as Partial<Track>[])
+      .map(track => ({
+        title: typeof track.title === "string" ? track.title : "",
+        artist: typeof track.artist === "string" ? track.artist : "",
+        src: resolveAsset(track.src),
+        cover: resolveAsset(track.cover),
+      }))
+      .filter(track => track.src)
+  : [];
+
+const labels = {
+  play: t.a11y.musicPlay,
+  pause: t.a11y.musicPause,
+  previous: t.a11y.musicPrevious,
+  next: t.a11y.musicNext,
+  volume: t.a11y.musicVolume,
+  mute: t.a11y.musicMute,
+  unmute: t.a11y.musicUnmute,
+  expand: t.a11y.musicExpand,
+  collapse: t.a11y.musicCollapse,
+};
+---
+
+{
+  enabled && tracks.length > 0 && (
+    <div
+      id="bg-music-player"
+      transition:persist
+      data-playing="false"
+      data-collapsed="true"
+      data-muted="false"
+      class="fixed inset-s-4 bottom-4 z-40 flex"
+    >
+      <script
+        is:inline
+        type="application/json"
+        id="bg-music-data"
+        set:html={JSON.stringify({ tracks, autoplay, labels })}
+      />
+
+      <audio id="bgm-audio" preload="metadata" />
+
+      {/* 折叠态：圆形音符按钮 */}
+      <button
+        id="bgm-fab"
+        type="button"
+        class="focus-outline text-foreground bg-background/80 border-border hover:text-accent flex size-12 items-center justify-center rounded-full border shadow-lg backdrop-blur-md"
+        aria-label={labels.expand}
+        aria-expanded="false"
+      >
+        <svg
+          class="bgm-note size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M9 18V5l12-2v13" />
+          <circle cx="6" cy="18" r="3" />
+          <circle cx="18" cy="16" r="3" />
+        </svg>
+      </button>
+
+      {/* 展开态：播放控制条 */}
+      <div
+        id="bgm-panel"
+        class="border-border bg-background/85 hidden w-[min(22rem,calc(100vw-2rem))] items-center gap-2 rounded-2xl border p-2 shadow-lg backdrop-blur-md"
+      >
+        <div class="bg-muted text-muted-foreground relative size-10 shrink-0 overflow-hidden rounded-lg">
+          <img id="bgm-cover" alt="" class="hidden size-full object-cover" />
+          <svg
+            class="absolute inset-0 m-auto size-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M9 18V5l12-2v13" />
+            <circle cx="6" cy="18" r="3" />
+            <circle cx="18" cy="16" r="3" />
+          </svg>
+        </div>
+
+        <div class="min-w-0 flex-1">
+          <p
+            id="bgm-title"
+            class="text-foreground block truncate text-xs leading-4 font-medium"
+          />
+          <p
+            id="bgm-artist"
+            class="text-muted-foreground block truncate text-[11px] leading-4"
+          >
+            &nbsp;
+          </p>
+          <input
+            id="bgm-progress"
+            type="range"
+            min="0"
+            max="0"
+            step="0.1"
+            value="0"
+            aria-label="Progress"
+            class="accent-accent mt-1 h-1 w-full cursor-pointer"
+          />
+        </div>
+
+        <div class="flex shrink-0 items-center">
+          <button
+            id="bgm-prev"
+            type="button"
+            class="focus-outline text-foreground hover:text-accent p-1.5"
+            aria-label={labels.previous}
+          >
+            <svg
+              class="size-4"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M7 5v14H5V5h2Zm12 0v14l-10-7 10-7Z" />
+            </svg>
+          </button>
+          <button
+            id="bgm-toggle"
+            type="button"
+            class="focus-outline bg-accent text-accent-foreground mx-0.5 grid size-9 place-items-center rounded-full hover:opacity-90"
+            aria-label={labels.play}
+          >
+            <svg
+              id="bgm-icon-play"
+              class="size-5"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M8 5v14l11-7L8 5Z" />
+            </svg>
+            <svg
+              id="bgm-icon-pause"
+              class="hidden size-5"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M7 5h3.5v14H7V5Zm6.5 0H17v14h-3.5V5Z" />
+            </svg>
+          </button>
+          <button
+            id="bgm-next"
+            type="button"
+            class="focus-outline text-foreground hover:text-accent p-1.5"
+            aria-label={labels.next}
+          >
+            <svg
+              class="size-4"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              aria-hidden="true"
+            >
+              <path d="M17 5h2v14h-2V5ZM5 5l10 7-10 7V5Z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="hidden shrink-0 items-center sm:flex">
+          <button
+            id="bgm-mute"
+            type="button"
+            class="focus-outline text-foreground hover:text-accent p-1.5"
+            aria-label={labels.mute}
+          >
+            <svg
+              id="bgm-icon-volume"
+              class="size-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+            </svg>
+            <svg
+              id="bgm-icon-muted"
+              class="hidden size-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+              <line x1="22" y1="9" x2="16" y2="15" />
+              <line x1="16" y1="9" x2="22" y2="15" />
+            </svg>
+          </button>
+          <input
+            id="bgm-volume"
+            type="range"
+            min="0"
+            max="1"
+            step="0.05"
+            value="1"
+            aria-label={labels.volume}
+            class="accent-accent h-1 w-14 cursor-pointer"
+          />
+        </div>
+
+        <button
+          id="bgm-collapse"
+          type="button"
+          class="focus-outline text-foreground hover:text-accent p-1.5"
+          aria-label={labels.collapse}
+        >
+          <svg
+            class="size-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  type Track = {
+    title: string;
+    artist: string;
+    src: string;
+    cover: string;
+  };
+
+  type PlayerPayload = {
+    tracks: Track[];
+    autoplay: boolean;
+    labels: Record<string, string>;
+  };
+
+  type SavedState = {
+    playing?: boolean;
+    index?: number;
+    time?: number;
+    volume?: number;
+    muted?: boolean;
+    collapsed?: boolean;
+  };
+
+  const STORAGE_KEY = "bg-music:v1";
+
+  function initBackgroundMusic() {
+    const root = document.getElementById("bg-music-player");
+    if (!root || root.dataset.ready === "true") return;
+    root.dataset.ready = "true";
+
+    const dataEl = document.getElementById("bg-music-data");
+    if (!(dataEl instanceof HTMLScriptElement) || !dataEl.textContent) return;
+
+    let payload: PlayerPayload;
+    try {
+      payload = JSON.parse(dataEl.textContent) as PlayerPayload;
+    } catch {
+      return;
+    }
+    const tracks = payload.tracks ?? [];
+    if (tracks.length === 0) return;
+
+    const audio = document.getElementById("bgm-audio");
+    const fab = document.getElementById("bgm-fab");
+    const panel = document.getElementById("bgm-panel");
+    const toggleBtn = document.getElementById("bgm-toggle");
+    const prevBtn = document.getElementById("bgm-prev");
+    const nextBtn = document.getElementById("bgm-next");
+    const muteBtn = document.getElementById("bgm-mute");
+    const collapseBtn = document.getElementById("bgm-collapse");
+    const volumeRange = document.getElementById("bgm-volume");
+    const progress = document.getElementById("bgm-progress");
+    const titleEl = document.getElementById("bgm-title");
+    const artistEl = document.getElementById("bgm-artist");
+    const coverImg = document.getElementById("bgm-cover");
+    const iconPlay = document.getElementById("bgm-icon-play");
+    const iconPause = document.getElementById("bgm-icon-pause");
+    const iconVolume = document.getElementById("bgm-icon-volume");
+    const iconMuted = document.getElementById("bgm-icon-muted");
+
+    if (
+      !(audio instanceof HTMLAudioElement) ||
+      !(fab instanceof HTMLButtonElement) ||
+      !(panel instanceof HTMLElement) ||
+      !(toggleBtn instanceof HTMLButtonElement) ||
+      !(prevBtn instanceof HTMLButtonElement) ||
+      !(nextBtn instanceof HTMLButtonElement) ||
+      !(muteBtn instanceof HTMLButtonElement) ||
+      !(collapseBtn instanceof HTMLButtonElement) ||
+      !(volumeRange instanceof HTMLInputElement) ||
+      !(progress instanceof HTMLInputElement) ||
+      !titleEl ||
+      !artistEl ||
+      !(coverImg instanceof HTMLImageElement) ||
+      !iconPlay ||
+      !iconPause ||
+      !iconVolume ||
+      !iconMuted
+    ) {
+      return;
+    }
+
+    let saved: SavedState = {};
+    try {
+      saved = JSON.parse(
+        localStorage.getItem(STORAGE_KEY) ?? "{}"
+      ) as SavedState;
+    } catch {
+      saved = {};
+    }
+
+    let index =
+      typeof saved.index === "number" && saved.index >= 0
+        ? saved.index % tracks.length
+        : 0;
+    let pendingSeek =
+      typeof saved.time === "number" && Number.isFinite(saved.time)
+        ? Math.max(0, saved.time)
+        : 0;
+    let lastSavedAt = 0;
+
+    const save = (extra: SavedState = {}) => {
+      const state: SavedState = {
+        playing: !audio.paused,
+        index,
+        time: audio.currentTime,
+        volume: audio.volume,
+        muted: audio.muted,
+        collapsed: root.dataset.collapsed === "true",
+        ...extra,
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch {
+        // Storage may be unavailable (private mode); playback still works.
+      }
+      lastSavedAt = Date.now();
+    };
+
+    const setCollapsed = (collapsed: boolean) => {
+      root.dataset.collapsed = String(collapsed);
+      fab.classList.toggle("hidden", !collapsed);
+      panel.classList.toggle("hidden", collapsed);
+      panel.classList.toggle("flex", !collapsed);
+      fab.setAttribute("aria-expanded", String(!collapsed));
+      save({ collapsed });
+    };
+
+    const renderTrack = () => {
+      const track = tracks[index];
+      if (!track) return;
+      audio.src = track.src;
+      titleEl.textContent = track.title || "";
+      titleEl.title = track.title || "";
+      artistEl.textContent = track.artist || "\u00A0";
+      if (track.cover) {
+        coverImg.src = track.cover;
+        coverImg.classList.remove("hidden");
+      } else {
+        coverImg.removeAttribute("src");
+        coverImg.classList.add("hidden");
+      }
+      progress.value = "0";
+      pendingSeek = 0;
+    };
+
+    const setPlayingUI = (playing: boolean) => {
+      root.dataset.playing = String(playing);
+      iconPlay.classList.toggle("hidden", playing);
+      iconPause.classList.toggle("hidden", !playing);
+      toggleBtn.setAttribute(
+        "aria-label",
+        playing ? payload.labels.pause : payload.labels.play
+      );
+    };
+
+    const setMutedUI = () => {
+      const muted = audio.muted || audio.volume === 0;
+      root.dataset.muted = String(muted);
+      iconVolume.classList.toggle("hidden", muted);
+      iconMuted.classList.toggle("hidden", !muted);
+      muteBtn.setAttribute(
+        "aria-label",
+        muted ? payload.labels.unmute : payload.labels.mute
+      );
+    };
+
+    const play = async () => {
+      try {
+        await audio.play();
+      } catch {
+        // Autoplay can be blocked until the user interacts with the page.
+      }
+    };
+
+    const loadTrack = (nextIndex: number, shouldAutoplay: boolean) => {
+      index = (nextIndex + tracks.length) % tracks.length;
+      renderTrack();
+      if (shouldAutoplay) void play();
+      save({ index, time: 0 });
+    };
+
+    // ---- Media events ----
+    audio.addEventListener("play", () => {
+      setPlayingUI(true);
+      save({ playing: true });
+    });
+
+    audio.addEventListener("pause", () => {
+      setPlayingUI(false);
+      save({ playing: false });
+    });
+
+    audio.addEventListener("loadedmetadata", () => {
+      if (Number.isFinite(audio.duration)) {
+        progress.max = String(audio.duration);
+      }
+      if (pendingSeek > 1 && pendingSeek < audio.duration - 1) {
+        audio.currentTime = pendingSeek;
+      }
+      pendingSeek = 0;
+    });
+
+    audio.addEventListener("timeupdate", () => {
+      if (!Number.isNaN(audio.duration)) {
+        progress.value = String(audio.currentTime);
+      }
+      if (Date.now() - lastSavedAt > 4000) save();
+    });
+
+    audio.addEventListener("ended", () => {
+      loadTrack(index + 1, true);
+    });
+
+    audio.addEventListener("volumechange", () => {
+      volumeRange.value = String(audio.muted ? 0 : audio.volume);
+      setMutedUI();
+    });
+
+    // ---- Controls ----
+    toggleBtn.addEventListener("click", () => {
+      if (audio.paused) void play();
+      else audio.pause();
+    });
+
+    prevBtn.addEventListener("click", () => {
+      loadTrack(index - 1, !audio.paused);
+    });
+
+    nextBtn.addEventListener("click", () => {
+      loadTrack(index + 1, !audio.paused);
+    });
+
+    progress.addEventListener("input", () => {
+      const seconds = Number.parseFloat(progress.value);
+      if (Number.isFinite(seconds)) audio.currentTime = seconds;
+    });
+
+    volumeRange.addEventListener("input", () => {
+      const volume = Number.parseFloat(volumeRange.value);
+      audio.volume = Number.isFinite(volume) ? volume : 1;
+      if (audio.muted && audio.volume > 0) audio.muted = false;
+    });
+
+    muteBtn.addEventListener("click", () => {
+      audio.muted = !audio.muted;
+    });
+
+    fab.addEventListener("click", () => setCollapsed(false));
+    collapseBtn.addEventListener("click", () => setCollapsed(true));
+
+    // Persist right before a client-side navigation; the persisted element
+    // keeps playing across pages without being rebuilt.
+    document.addEventListener("astro:before-swap", () => save(), {
+      once: false,
+    });
+
+    // ---- Initial state ----
+    if (typeof saved.volume === "number") {
+      audio.volume = Math.min(1, Math.max(0, saved.volume));
+    }
+    audio.muted = saved.muted === true;
+    volumeRange.value = String(audio.muted ? 0 : audio.volume);
+    renderTrack();
+    setMutedUI();
+    setPlayingUI(false);
+    setCollapsed(saved.collapsed === false ? false : true);
+
+    // Browsers block audio until the first user gesture. If the visitor was
+    // listening (or autoplay is enabled), resume on the first interaction.
+    const wantAutostart = saved.playing === true || payload.autoplay === true;
+    if (wantAutostart) {
+      const startOnFirstGesture = () => {
+        void play();
+        document.removeEventListener("pointerdown", startOnFirstGesture);
+        document.removeEventListener("keydown", startOnFirstGesture);
+        document.removeEventListener("touchstart", startOnFirstGesture);
+      };
+      document.addEventListener("pointerdown", startOnFirstGesture, {
+        once: true,
+      });
+      document.addEventListener("keydown", startOnFirstGesture, { once: true });
+      document.addEventListener("touchstart", startOnFirstGesture, {
+        once: true,
+      });
+      void play();
+    }
+  }
+
+  document.addEventListener("astro:page-load", initBackgroundMusic);
+</script>
+
+<style>
+  #bg-music-player[data-playing="true"] .bgm-note {
+    animation: bgm-spin 5s linear infinite;
+  }
+
+  @keyframes bgm-spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    #bg-music-player[data-playing="true"] .bgm-note {
+      animation: none;
+    }
+  }
+</style>
