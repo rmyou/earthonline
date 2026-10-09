@@ -1,8 +1,7 @@
 ---
-title: "关于"
-description: "关于 kream，以及“话说三遍淡如水”这个博客。"
+title: 关于
+description: 我叫kream，为什么叫这个名字，后面会在个人简介中解释。在这里，各位将看到一个普通人的普通的故事
 ---
-
 你好，我是 kream。
 
 这个博客叫“话说三遍淡如水”。名字提醒我：重复空话没有价值，真正值得留下的，是把问题讲清楚、把过程写明白，以及对自己诚实。
@@ -24,3 +23,4 @@ description: "关于 kream，以及“话说三遍淡如水”这个博客。"
 目前只公开 GitHub，你可以在这里找到我：
 
 - [github.com/rmyou](https://github.com/rmyou)
+
