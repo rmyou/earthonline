@@ -22,7 +22,7 @@ const { Content } = await render(about);
 
 <Layout
   title={`${about.data.title} | ${config.site.title}`}
-  description={about.data.description}
+  description={about.data.description ?? undefined}
   ogImage={about.data.ogImage}
   canonicalURL={about.data.canonicalURL}
 >

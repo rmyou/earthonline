@@ -91,6 +91,17 @@ description: 用于列表和 SEO 的文章摘要。
 
 站点使用项目子路径 `/earthonline`，因此 Astro 的 `site` 为 `https://rmyou.github.io`，`base` 为 `/earthonline`。新增 Markdown 内链时应使用相对链接，或在 Astro 组件中使用 `getRelativeLocaleUrl`、`getAssetPath`。
 
+## 页面缓存与 Service Worker
+
+GitHub Pages 会给 HTML 固定返回 `Cache-Control: max-age=600`（浏览器缓存 10 分钟），该响应头无法在仓库中修改。为让 Pages CMS 发布后访客无需强刷即可看到最新页面，站点注册了 `public/sw.js`：
+
+- 仅在生产环境注册（`import.meta.env.PROD`），本地 `pnpm dev` 不受影响，注册地址为 `/earthonline/sw.js`，作用域覆盖整个子站。
+- 对 HTML 文档采用 network-first：优先请求网络，拿到新页面后顺手更新缓存；断网时才回退到最近缓存的文档。
+- CSS/JS 是带哈希的文件名，内容变化后文件名即变化，因此不拦截这部分请求，不会用到旧样式。
+- 部署完成后，访客首次访问安装新 SW，再刷新一次即永久生效。
+
+卸载时**不能只删除 `public/sw.js`**（老访客浏览器中已安装的副本无法自行消失）。正确做法：先把 `public/sw.js` 内容替换为自毁脚本（`self.skipWaiting()` → 清除全部缓存 → `self.registration.unregister()`），并移除 `src/layouts/Layout.astro` 中的注册代码，部署后老访客访问一次即完成注销；确认生效后再删除该文件。
+
 ## License
 
 基于 AstroPaper 的 MIT License 构建，原始版权声明保留在 `LICENSE` 中。

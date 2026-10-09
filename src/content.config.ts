@@ -30,7 +30,8 @@ const pages = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/pages" }),
   schema: z.object({
     title: z.string(),
-    description: z.string().optional(),
+    // Pages CMS 中描述字段可留空，此时 YAML 解析为 null，需要同时允许 null。
+    description: z.string().optional().nullable(),
     ogImage: z.string().optional(),
     canonicalURL: z.string().optional(),
   }),

@@ -148,5 +148,21 @@ const backgroundImage = siteSettings.background?.image?.trim();
     <script>
       import "@/scripts/theme";
     </script>
+    {
+      // 仅生产环境注册 network-first Service Worker；
+      // 用 getAssetPath 生成带 base 的正确地址（/earthonline/sw.js）。
+      !import.meta.env.DEV && (
+        <script
+          is:inline
+          define:vars={{ swUrl: getAssetPath("sw.js") }}
+        >
+          if ("serviceWorker" in navigator) {
+            window.addEventListener("load", () => {
+              navigator.serviceWorker.register(swUrl);
+            });
+          }
+        </script>
+      )
+    }
   </body>
 </html>
