@@ -1,7 +1,7 @@
 ---
 title: 个人“简”介
 description: 为什么要认真记录，以及这个博客准备长期写下什么。
-pubDatetime: 2026-10-15T10:37
+pubDatetime: 2026-10-10T19:05
 tags:
   - 随笔
   - 写作
