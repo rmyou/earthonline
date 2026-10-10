@@ -23,6 +23,7 @@ content:
       - name: description
         label: 摘要
         type: text
+        required: true
       - name: pubDatetime
         label: 发布时间
         type: date
