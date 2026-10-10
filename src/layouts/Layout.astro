@@ -120,6 +120,21 @@ const backgroundImage = siteSettings.background?.image?.trim();
       })();
     </script>
 
+    <!-- 滚动入场门控：支持 IntersectionObserver 且未开启“减少动态”时才标记；
+         同步执行保证首帧前决定，避免元素先显示再隐藏的闪烁。 -->
+    <script is:inline>
+      (function () {
+        var root = document.firstElementChild;
+        if (!root) return;
+        var reduceMotion = window.matchMedia(
+          "(prefers-reduced-motion: reduce)"
+        ).matches;
+        if (!reduceMotion && "IntersectionObserver" in window) {
+          root.setAttribute("data-reveal", "on");
+        }
+      })();
+    </script>
+
     <ClientRouter />
   </head>
   <body
@@ -148,21 +163,11 @@ const backgroundImage = siteSettings.background?.image?.trim();
     <script>
       import "@/scripts/theme";
     </script>
-    {
-      // 仅生产环境注册 network-first Service Worker；
-      // 用 getAssetPath 生成带 base 的正确地址（/earthonline/sw.js）。
-      !import.meta.env.DEV && (
-        <script
-          is:inline
-          define:vars={{ swUrl: getAssetPath("sw.js") }}
-        >
-          if ("serviceWorker" in navigator) {
-            window.addEventListener("load", () => {
-              navigator.serviceWorker.register(swUrl);
-            });
-          }
-        </script>
-      )
-    }
+    <script>
+      import "@/scripts/reveal";
+    </script>
+    <script>
+      import "@/scripts/sw-register";
+    </script>
   </body>
 </html>

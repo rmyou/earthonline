@@ -1,0 +1,176 @@
+/* 用途：集中管理全站动效——缓动令牌、跨页转场、滚动入场与微交互。 */
+/* 编辑：想统一调“快/慢/风格”只改本文件；所有位移动效均遵守 prefers-reduced-motion。 */
+
+:root {
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-fast: 160ms;
+  --motion: 420ms;
+}
+
+/* ===== 跨页转场（Astro View Transitions）===== */
+/* 旧页快速淡出、新页轻微上移淡入，避免白屏闪烁。 */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) {
+    z-index: 1;
+    animation: vt-fade-out 0.18s ease both;
+  }
+  ::view-transition-new(root) {
+    z-index: 2;
+    animation: vt-fade-up 0.42s var(--motion-ease) both;
+  }
+}
+
+@keyframes vt-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+@keyframes vt-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ===== 滚动入场（reveal）=====
+   只有 head 内联脚本在“支持 IntersectionObserver 且未开启减少动态”时
+   才会给 <html> 加 data-reveal="on"。因此无 JS / 降级环境下内容始终可见，
+   这里的初始隐藏不会造成内容永久不可读。 */
+@media (prefers-reduced-motion: no-preference) {
+  html[data-reveal="on"] [data-reveal] {
+    --reveal-delay: 0ms;
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity var(--motion) var(--motion-ease) var(--reveal-delay),
+      transform var(--motion) var(--motion-ease) var(--reveal-delay);
+    will-change: opacity, transform;
+  }
+
+  html[data-reveal="on"] [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* 同级元素错峰浮现（卡片列表 / 瀑布流），超过 6 个后不再增加延迟。 */
+  html[data-reveal="on"] [data-reveal]:nth-child(2) {
+    --reveal-delay: 70ms;
+  }
+  html[data-reveal="on"] [data-reveal]:nth-child(3) {
+    --reveal-delay: 140ms;
+  }
+  html[data-reveal="on"] [data-reveal]:nth-child(4) {
+    --reveal-delay: 210ms;
+  }
+  html[data-reveal="on"] [data-reveal]:nth-child(5) {
+    --reveal-delay: 280ms;
+  }
+  html[data-reveal="on"] [data-reveal]:nth-child(6) {
+    --reveal-delay: 350ms;
+  }
+}
+
+/* 兜底：任何情况下开启“减少动态效果”都直接呈现，不做位移。 */
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ===== 顶部导航与图标按钮 ===== */
+#nav-menu #menu-items > li > a,
+#nav-menu #menu-items > li > button {
+  border-radius: 0.6rem;
+  transition:
+    background-color var(--motion-fast) ease,
+    color var(--motion-fast) ease;
+}
+
+#nav-menu #menu-items > li > a:hover,
+#nav-menu #menu-items > li > button:hover {
+  background-color: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  #nav-menu #menu-items > li > a,
+  #nav-menu #menu-items > li > button {
+    transition:
+      background-color var(--motion-fast) ease,
+      color var(--motion-fast) ease,
+      transform var(--motion-fast) var(--motion-ease);
+  }
+
+  #nav-menu #menu-items > li > a:active,
+  #nav-menu #menu-items > li > button:active {
+    transform: scale(0.94);
+  }
+}
+
+/* ===== 文章卡片标题：颜色平滑过渡 ===== */
+#main-content li > a {
+  transition: color var(--motion-fast) ease;
+}
+
+/* ===== 摄影画廊：统一缓动，悬停时照片极轻微推近 ===== */
+#photo-grid button {
+  transition:
+    transform 0.35s var(--motion-ease),
+    box-shadow 0.35s var(--motion-ease);
+}
+#photo-grid button img {
+  transition: transform 0.6s var(--motion-ease);
+}
+#photo-grid button:hover img,
+#photo-grid button:focus-visible img {
+  transform: scale(1.03);
+}
+
+/* ===== 摄影灯箱：背景淡入、中央白框轻微缩放浮现 ===== */
+@media (prefers-reduced-motion: no-preference) {
+  #photo-lightbox:not(.hidden) #plb-backdrop {
+    animation: lb-fade 0.3s ease both;
+  }
+  #photo-lightbox:not(.hidden) figure {
+    animation: lb-pop 0.45s var(--motion-ease) both;
+  }
+}
+
+@keyframes lb-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes lb-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #photo-grid button,
+  #photo-grid button img {
+    transition: none;
+  }
+  #photo-grid button:hover,
+  #photo-grid button:focus-visible {
+    transform: none;
+  }
+  #photo-grid button:hover img,
+  #photo-grid button:focus-visible img {
+    transform: none;
+  }
+}

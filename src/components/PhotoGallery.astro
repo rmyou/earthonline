@@ -33,7 +33,7 @@ const t = useTranslations(locale);
     <>
       <ul id="photo-grid" class="columns-1 gap-6 sm:columns-2 lg:columns-3">
         {photos.map((photo, index) => (
-          <li class="mb-6 break-inside-avoid">
+          <li class="mb-6 break-inside-avoid" data-reveal>
             <button
               type="button"
               class="group block w-full rounded-[3px] bg-white p-3 pb-4 text-start shadow-lg transition duration-200 hover:-translate-y-1 hover:shadow-2xl focus-visible:-translate-y-1"
